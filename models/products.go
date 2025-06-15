@@ -1,11 +1,9 @@
 package models
 
 import (
-	"fmt"
-	"regexp"
-	"strconv"
 	"time"
 
+	"com.app/pos-app/utils"
 	"gorm.io/gorm"
 )
 
@@ -51,15 +49,7 @@ type ProductWithCategory struct {
 func (p *Product) BeforeCreate(tx *gorm.DB) (err error) {
 	var last Product
 	tx.Order("id DESC").First(&last)
-	re := regexp.MustCompile(`\d+`)
 	productCode := last.ProductCode
-	numberStr := re.FindString(productCode)
-	num, err := strconv.Atoi(numberStr)
-	if err != nil {
-		fmt.Println("ERR ", err)
-		return
-	}
-	newID := num + 1
-	p.ProductCode = fmt.Sprintf("PRD%05d", newID) // PRD00001, PRD00002, ...
+	p.ProductCode = utils.GenerateCode("PRD", productCode, "5") //fmt.Sprintf("PRD%05d", newID) // PRD00001, PRD00002, ...
 	return nil
 }

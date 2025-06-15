@@ -1,11 +1,9 @@
 package models
 
 import (
-	"fmt"
-	"regexp"
-	"strconv"
 	"time"
 
+	"com.app/pos-app/utils"
 	"gorm.io/gorm"
 )
 
@@ -42,14 +40,6 @@ func (u *Users) BeforeCreate(tx *gorm.DB) (err error) {
 	var lastUser Users
 	tx.Order("id DESC").First(&lastUser)
 	userCode := lastUser.UserCode
-	re := regexp.MustCompile(`\d+`)
-	numberStr := re.FindString(userCode)
-	num, err := strconv.Atoi(numberStr)
-	if err != nil {
-		fmt.Println("ERR ", err)
-		return
-	}
-	newID := num + 1
-	u.UserCode = fmt.Sprintf("U%05d", newID)
+	u.UserCode = utils.GenerateCode("U", userCode, "5")
 	return nil
 }
