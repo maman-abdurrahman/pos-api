@@ -23,12 +23,20 @@ type Product struct {
 	UpdatedAt    *time.Time `json:"updated_at"`
 }
 
+// type CreateProduct struct {
+// 	ProductCode  string  `json:"product_code"`
+// 	Name         string  `json:"name"`
+// 	CategoryCode string  `json:"category_code"`
+// 	Price        float64 `json:"price"`
+// 	Stock        int     `json:"stock"`
+// }
+
 type CreateProduct struct {
 	ProductCode  string  `json:"product_code"`
-	Name         string  `json:"name"`
-	CategoryCode string  `json:"category_code"`
-	Price        float64 `json:"price"`
-	Stock        int     `json:"stock"`
+	Name         string  `json:"name" validate:"required,min=3"`
+	CategoryCode string  `json:"category_code" validate:"required"`
+	Price        float64 `json:"price" validate:"required,gt=0"`
+	Stock        int     `json:"stock" validate:"required,gte=0"`
 }
 
 type ProductWithCategory struct {

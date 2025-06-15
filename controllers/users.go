@@ -75,7 +75,6 @@ func PostUser(c *fiber.Ctx) error {
 	errValidate := validate.Struct(userBody)
 	if errValidate != nil {
 		for _, e := range errValidate.(validator.ValidationErrors) {
-			// errorValidateBody[err.Field()] = fmt.Sprintf("Field '%s' failed validation (%s)", err.Field(), err.Tag())
 			errorField := utils.ValidatorForm(e)
 			return utils.Error(c, 400, "Validation error", errorField)
 		}

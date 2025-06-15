@@ -11,7 +11,7 @@ POST {{hostname}}/products/create
 Content-Type: application/json
 
 {
-    "name": "Biskuit Roma",
+    "name": "Bi",
     "category_code": "CT003",
     "price": 7000,
     "stock": 20

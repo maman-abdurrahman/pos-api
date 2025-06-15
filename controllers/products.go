@@ -10,6 +10,7 @@ import (
 	"com.app/pos-app/database"
 	"com.app/pos-app/models"
 	"com.app/pos-app/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -71,13 +72,20 @@ func GetOneProducts(c *fiber.Ctx) error {
 }
 
 func CreateProducts(c *fiber.Ctx) error {
+	validate := validator.New()
 	var request models.CreateProduct
 
 	errReq := c.BodyParser(&request)
 	if errReq != nil {
 		return utils.Error(c, 400, "Invalid request", nil)
 	}
-
+	errValidateForm := validate.Struct(request)
+	if errValidateForm != nil {
+		for _, e := range errValidateForm.(validator.ValidationErrors) {
+			errorField := utils.ValidatorForm(e)
+			return utils.Error(c, 400, "Validation error", errorField)
+		}
+	}
 	product := models.Product{
 		ProductCode:  request.ProductCode,
 		Name:         request.Name,
