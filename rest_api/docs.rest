@@ -61,3 +61,16 @@ Content-Type: application/json
 
 ###
 DELETE  {{hostname}}/users/delete/U00003
+
+
+
+###
+GET {{hostname}}/roles?page=1
+
+###
+POST {{hostname}}/roles/create
+Content-Type: application/json
+
+{
+    "name":"Super Admin"
+}

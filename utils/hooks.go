@@ -2,6 +2,9 @@ package utils
 
 import (
 	"fmt"
+	"log"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -58,4 +61,21 @@ func Ucwords(s string) string {
 		}
 	}
 	return strings.Join(words, " ")
+}
+
+func GenerateCode(codestr string, data string, decimal string) string {
+	if len(decimal) <= 0 {
+		decimal = "5" // default to 4 digits
+	}
+	re := regexp.MustCompile(`\d+`)
+	numberStr := re.FindString(data)
+	num, err := strconv.Atoi(numberStr)
+	if err != nil {
+		log.Fatal("Cannot generate code")
+		return ""
+	}
+	newID := num + 1
+	format := fmt.Sprintf("%%s%%0%sd", decimal)
+	newCode := fmt.Sprintf(format, codestr, newID)
+	return newCode
 }
