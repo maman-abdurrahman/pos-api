@@ -7,6 +7,7 @@ import (
 	"com.app/pos-app/database"
 	"com.app/pos-app/models"
 	"com.app/pos-app/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -52,10 +53,18 @@ func GetOneRole(c *fiber.Ctx) error {
 	return utils.Success(c, "Success getting data", fiber.Map{})
 }
 func CreateRole(c *fiber.Ctx) error {
+	validate := validator.New()
 	var roleBody models.CreateRole
 	errBody := c.BodyParser(&roleBody)
 	if errBody != nil {
 		return utils.Error(c, 500, "Invalid request", nil)
+	}
+	errValidate := validate.Struct(roleBody)
+	if errValidate != nil {
+		for _, e := range errValidate.(validator.ValidationErrors) {
+			errorField := utils.ValidatorForm(e)
+			return utils.Error(c, 400, "Validation error", errorField)
+		}
 	}
 	role := models.Role{
 		Name: roleBody.Name,

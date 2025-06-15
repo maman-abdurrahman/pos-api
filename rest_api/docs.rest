@@ -40,8 +40,8 @@ POST {{hostname}}/users/create
 Content-Type: application/json
 
 {
-    "name":"Danil",
-    "email": "danil@example.com",
+    "name":"Lulu",
+    "email": "lulu@example.com",
     "password": "12345678",
     "role_code": "RL002",
     "is_active": true
@@ -72,5 +72,5 @@ POST {{hostname}}/roles/create
 Content-Type: application/json
 
 {
-    "name":"Super Admin"
+    "name":"Su"
 }

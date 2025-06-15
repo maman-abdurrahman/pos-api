@@ -16,7 +16,7 @@ type Role struct {
 
 type CreateRole struct {
 	RoleCode string `json:"role_code"`
-	Name     string `json:"name"`
+	Name     string `json:"name" validate:"required,min=3"`
 }
 
 func (r *Role) BeforeCreate(tx *gorm.DB) (err error) {
