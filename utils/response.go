@@ -10,10 +10,10 @@ func Success(c *fiber.Ctx, message string, data interface{}) error {
 	})
 }
 
-func Error(c *fiber.Ctx, code int, message string) error {
+func Error(c *fiber.Ctx, code int, message string, data any) error {
 	return c.Status(code).JSON(fiber.Map{
 		"status":  "failed",
 		"message": message,
-		"data":    nil,
+		"data":    data,
 	})
 }

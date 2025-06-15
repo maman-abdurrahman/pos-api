@@ -22,10 +22,10 @@ type Users struct {
 
 type CreateUser struct {
 	UserCode string `json:"user_code"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"-"`
-	RoleCode string `json:"role_code"`
+	Name     string `json:"name" validate:"required,min=3"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
+	RoleCode string `json:"role_code" validate:"required"`
 	IsActive bool   `json:"is_active"`
 }
 

@@ -7,6 +7,7 @@ import (
 	"com.app/pos-app/database"
 	"com.app/pos-app/models"
 	"com.app/pos-app/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -37,7 +38,7 @@ func GetUsers(c *fiber.Ctx) error {
 		Offset(offset).
 		Find(&users).Error
 	if err != nil {
-		return utils.Error(c, 404, "Data not found")
+		return utils.Error(c, 404, "Data not found", nil)
 	}
 	return utils.Success(c, "Success getting data", fiber.Map{
 		"result": users,
@@ -59,23 +60,32 @@ func GetOneUser(c *fiber.Ctx) error {
 		Where("user_code = ?", code).
 		First(&user).Error
 	if err != nil {
-		return utils.Error(c, 404, "Data not found")
+		return utils.Error(c, 404, "Data not found", nil)
 	}
 	return utils.Success(c, "Success getting data", user)
 }
 
 func PostUser(c *fiber.Ctx) error {
+	validate := validator.New()
 	var userBody models.CreateUser
 	errBody := c.BodyParser(&userBody)
 	if errBody != nil {
-		return utils.Error(c, 400, "Invalid request")
+		return utils.Error(c, 400, "Invalid request", nil)
+	}
+	errValidate := validate.Struct(userBody)
+	if errValidate != nil {
+		for _, e := range errValidate.(validator.ValidationErrors) {
+			// errorValidateBody[err.Field()] = fmt.Sprintf("Field '%s' failed validation (%s)", err.Field(), err.Tag())
+			errorField := utils.ValidatorForm(e)
+			return utils.Error(c, 400, "Validation error", errorField)
+		}
 	}
 	if len(userBody.Password) < 8 {
-		return utils.Error(c, 500, "Password to small min 8 character")
+		return utils.Error(c, 500, "Password to small min 8 character", nil)
 	}
 	hashPass, errHash := utils.HashPassword(userBody.Password)
 	if errHash != nil {
-		return utils.Error(c, 500, "Error hash password")
+		return utils.Error(c, 500, "Error hash password", nil)
 	}
 	userPayload := models.Users{
 		Name:     userBody.Name,
@@ -86,7 +96,7 @@ func PostUser(c *fiber.Ctx) error {
 	}
 	errStore := database.DB.Create(&userPayload).Error
 	if errStore != nil {
-		return utils.Error(c, 500, "Failed to save data")
+		return utils.Error(c, 500, "Failed to save data", nil)
 	}
 	return utils.Success(c, "Success save data", userPayload)
 }
@@ -96,12 +106,12 @@ func UpdateUser(c *fiber.Ctx) error {
 	var users models.Users
 	errFindUser := database.DB.Where("user_code = ?", code).First(&users).Error
 	if errFindUser != nil {
-		return utils.Error(c, 404, "Data not found")
+		return utils.Error(c, 404, "Data not found", nil)
 	}
 	var userBody models.CreateUser
 	errBody := c.BodyParser(&userBody)
 	if errBody != nil {
-		return utils.Error(c, 400, "Invalid request")
+		return utils.Error(c, 400, "Invalid request", nil)
 	}
 	userPayload := models.Users{
 		Name:     userBody.Name,
@@ -114,7 +124,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		Where("user_code =?", code).
 		Updates(userPayload).Error
 	if errUpdate != nil {
-		return utils.Error(c, 500, "Failed update data")
+		return utils.Error(c, 500, "Failed update data", nil)
 	}
 	return utils.Success(c, "Success update data", userPayload)
 }
@@ -124,11 +134,11 @@ func DeleteUser(c *fiber.Ctx) error {
 	var users models.Users
 	errFind := database.DB.Where("user_code = ?", code).First(&users).Error
 	if errFind != nil {
-		return utils.Error(c, 404, "Data not found")
+		return utils.Error(c, 404, "Data not found", nil)
 	}
 	errDelete := database.DB.Where("user_code = ?", code).Delete(&models.Users{}).Error
 	if errDelete != nil {
-		return utils.Error(c, 404, "Failed to delete data")
+		return utils.Error(c, 404, "Failed to delete data", nil)
 	}
 	return utils.Success(c, "Success delete data", users)
 }
