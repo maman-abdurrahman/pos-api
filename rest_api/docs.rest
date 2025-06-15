@@ -1,0 +1,63 @@
+@hostname=http://127.0.0.1:9000/api
+
+###
+GET {{hostname}}/products?search=minuman&page=1&limit=5
+
+###
+GET {{hostname}}/products/PRD00005
+
+###
+POST {{hostname}}/products/create
+Content-Type: application/json
+
+{
+    "name": "Biskuit Roma",
+    "category_code": "CT003",
+    "price": 7000,
+    "stock": 20
+}
+
+###
+PUT {{hostname}}/products/update/PRD00003
+Content-Type: application/json
+
+{
+    "category_code": "CT002"
+}
+
+###
+DELETE  {{hostname}}/products/delete/PRD00007
+
+
+###
+GET {{hostname}}/users?page=2
+
+###
+GET {{hostname}}/users/U00001
+
+###
+POST {{hostname}}/users/create
+Content-Type: application/json
+
+{
+    "name":"Anton",
+    "email": "anton@email.com",
+    "password": "12345",
+    "role_code": "RL002",
+    "is_active": true
+}
+
+###
+PUT {{hostname}}/users/update/U00003
+Content-Type: application/json
+
+{
+    "name":"Anton",
+    "email": "anton123@example.com",
+    "password": "12345",
+    "role_code": "RL002",
+    "is_active": true
+}
+
+###
+DELETE  {{hostname}}/users/delete/U00003
