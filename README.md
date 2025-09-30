@@ -1,6 +1,7 @@
 # RUN DOCKER POSTGRSQL
 docker run -d \
   --name pos_postgres \
+  --network pos-network \
   -e POSTGRES_USER=posuser \
   -e POSTGRES_PASSWORD=pospass \
   -e POSTGRES_DB=posdb \

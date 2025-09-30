@@ -18,7 +18,9 @@ COPY . .
 RUN ls -la /app
 
 # Build the executable
-RUN go build -o main ./cmd/main.go
+# RUN go build -o main ./cmd/main.go
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./cmd/main.go
 
 # Step 2: Create minimal image
 FROM alpine:latest
