@@ -28,12 +28,6 @@ docker run -d \
   -v ./pos.sql:/docker-entrypoint-initdb.d/pos.sql:ro \
   postgres:15
 
-# Wait for PostgreSQL to be ready
-echo "Waiting for PostgreSQL to be ready..."
-until docker exec $CONTAINER_NAME pg_isready -U posuser > /dev/null 2>&1; do
-    sleep 1
-done
-echo "PostgreSQL is ready!"
 
 # Build Go app Docker image
 docker build -t $IMAGE_NAME .
