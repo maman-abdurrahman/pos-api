@@ -8,3 +8,6 @@ docker run -d \
   -v ./data:/var/lib/postgresql/data \
   -v ./pos.sql:/docker-entrypoint-initdb.d/pos.sql:ro \
   postgres:15
+
+# ENTRY TO CONTAINER
+docker exec -it pos_postgres psql -U posuser -d posdb
