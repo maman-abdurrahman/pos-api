@@ -11,3 +11,6 @@ docker run -d \
 
 # ENTRY TO CONTAINER
 docker exec -it pos_postgres psql -U posuser -d posdb
+
+# TO RUN PROJECT
+go run cmd/main.go
