@@ -46,4 +46,4 @@ docker run -d \
   $IMAGE_NAME
 
 # Show logs
-docker logs -f $CONTAINER_API_NAME
+docker logs $CONTAINER_API_NAME
