@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"com.app/pos-app/utils"
+	"gorm.io/gorm"
+)
 
 type Sales struct {
 	ID                uint      `gorm:"primaryKey;autoIncrement" json:"id"`
@@ -15,15 +20,15 @@ type Sales struct {
 }
 
 type CreateSales struct {
-	SalesCode 			string `json:"sales_code" validate:"required, min=5"`
-	UserCode 			string `json:"user_code"`
-	PaymentMethodCode 	string `json:"payment_method_code" validate:"required"`
-	Total				string `json:"total"`
-	Discount			string `json:"discount"`
-	FinalTotal			string `json:"final_total"`
+	SalesCode         string `json:"sales_code" validate:"required, min=5"`
+	UserCode          string `json:"user_code"`
+	PaymentMethodCode string `json:"payment_method_code" validate:"required"`
+	Total             string `json:"total"`
+	Discount          string `json:"discount"`
+	FinalTotal        string `json:"final_total"`
 }
 
-func (u *Sales) BeforeCreate(tx *gorm.DB) (err error) {
+func (s *Sales) BeforeCreate(tx *gorm.DB) (err error) {
 	var lastSales Sales
 	tx.Order("id DESC").First(&lastSales)
 	salesCode := lastSales.SalesCode
