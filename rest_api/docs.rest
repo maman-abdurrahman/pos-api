@@ -36,6 +36,14 @@ GET {{hostname}}/categories?page=1
 GET {{hostname}}/categories/CAT003
 
 ###
+PUT {{hostname}}/categories/update/CAT003
+Content-Type: application/json
+
+{
+    "name": "Mainan"
+}
+
+###
 GET {{hostname}}/users?page=1
 
 ###

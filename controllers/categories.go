@@ -7,6 +7,7 @@ import (
 	"com.app/pos-app/database"
 	"com.app/pos-app/models"
 	"com.app/pos-app/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -62,11 +63,61 @@ func GetOneCategory(c *fiber.Ctx) error {
 	return utils.Success(c, "Success getting data", category)
 }
 func CreateCategory(c *fiber.Ctx) error {
-	return utils.Success(c, "Success save data", fiber.Map{})
+	validate := validator.New()
+	var body models.CreateCategory
+	errBody := c.BodyParser(&body)
+	if errBody != nil {
+		return utils.Error(c, 400, "Invalid request", nil)
+	}
+	errValidate := validate.Struct(body)
+	if errValidate != nil {
+		for _, e := range errValidate.(validator.ValidationErrors) {
+			errorField := utils.ValidatorForm(e)
+			return utils.Error(c, 400, "Validation error", errorField)
+		}
+	}
+	payload := models.Category{
+		Name: body.Name,
+	}
+	errStore := database.DB.Create(&payload).Error
+	if errStore != nil {
+		return utils.Error(c, 500, "Failed to save data", nil)
+	}
+	return utils.Success(c, "Success save data", payload)
 }
 func UpdateCategory(c *fiber.Ctx) error {
-	return utils.Success(c, "Success update data", fiber.Map{})
+	code := c.Params("code")
+	var category models.Category
+	errFindCategory := database.DB.Where("category_code = ?", code).First(&category).Error
+	if errFindCategory != nil {
+		return utils.Error(c, 404, "Data not found", nil)
+	}
+	var body models.CreateCategory
+	errBody := c.BodyParser(&body)
+	if errBody != nil {
+		return utils.Error(c, 400, "Invalid request", nil)
+	}
+	payload := models.Category{
+		Name: body.Name,
+	}
+	errUpdate := database.DB.Model(models.Category{}).Where("category_code = ?", code).Updates(payload).Error
+	if errUpdate != nil {
+		return utils.Error(c, 500, "Failed update data", nil)
+	}
+	result := category
+	result.Name = body.Name
+	return utils.Success(c, "Success update data", result)
 }
 func DeleteCategory(c *fiber.Ctx) error {
-	return utils.Success(c, "Success delete data", fiber.Map{})
+	code := c.Params("code")
+	var category models.Category
+	errFind := database.DB.Where("category_code = ?", code).First(&category).Error
+	if errFind != nil {
+		return utils.Error(c, 404, "Data not found", nil)
+	}
+	errDelete := database.DB.Where("category_code = ?", code).Delete(&models.Category{}).Error
+	if errDelete != nil {
+		return utils.Error(c, 404, "Failed to delete data", nil)
+	}
+	return utils.Success(c, "Success delete data", category)
 }
