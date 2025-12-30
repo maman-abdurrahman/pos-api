@@ -13,3 +13,20 @@ type Sales struct {
 	FinalTotal        float64   `gorm:"type:numeric(12,2);not null" json:"final_total"`
 	CreatedAt         time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
+
+type CreateSales struct {
+	SalesCode 			string `json:"sales_code" validate:"required, min=5"`
+	UserCode 			string `json:"user_code"`
+	PaymentMethodCode 	string `json:"payment_method_code" validate:"required"`
+	Total				string `json:"total"`
+	Discount			string `json:"discount"`
+	FinalTotal			string `json:"final_total"`
+}
+
+func (u *Sales) BeforeCreate(tx *gorm.DB) (err error) {
+	var lastSales Sales
+	tx.Order("id DESC").First(&lastSales)
+	salesCode := lastSales.SalesCode
+	s.SalesCode = utils.GenerateCode("S", salesCode, "5")
+	return nil
+}
