@@ -31,11 +31,11 @@ func PublicRoutes(app *fiber.App) {
 	api.Put("/categories/update/:code", controllers.UpdateCategory)
 	api.Delete("/categories/delete/:code", controllers.DeleteCategory)
 
-	api.Get("/paymentMethod", controllers.GetPaymentMethods)
-	api.Get("/paymentMethod/:code", controllers.GetOnePaymentMethod)
-	api.Post("/paymentMethod/create", controllers.CreatePaymentMethod)
-	api.Put("/paymentMethod/update/:code", controllers.UpdatePaymentMethod)
-	api.Delete("/paymentMethod/delete/:code", controllers.DeletePaymentMethod)
+	api.Get("/payment_method", controllers.GetPaymentMethods)
+	api.Get("/payment_method/:code", controllers.GetOnePaymentMethod)
+	api.Post("/payment_method/create", controllers.CreatePaymentMethod)
+	api.Put("/payment_method/update/:code", controllers.UpdatePaymentMethod)
+	api.Delete("/payment_method/delete/:code", controllers.DeletePaymentMethod)
 
 	api.Get("/sales", controllers.GetSales)
 	api.Get("/sales/:code", controllers.GetOneSale)
@@ -43,9 +43,9 @@ func PublicRoutes(app *fiber.App) {
 	api.Put("/sales/update/:code", controllers.UpdateSale)
 	api.Delete("/sales/delete/:code", controllers.DeleteSale)
 
-	api.Get("/salesItems", controllers.GetSaleItems)
-	api.Get("/salesItems/:code", controllers.GetOneSaleItem)
-	api.Post("/salesItems/create", controllers.CreateSaleItem)
-	api.Put("/salesItems/update/:code", controllers.UpdateSaleItem)
-	api.Delete("/salesItems/delete/:code", controllers.DeleteSaleItem)
+	api.Get("/sales_items", controllers.GetSaleItems)
+	api.Get("/sales_items/:code", controllers.GetOneSaleItem)
+	api.Post("/sales_items/create", controllers.CreateSaleItem)
+	api.Put("/sales_items/update/:code", controllers.UpdateSaleItem)
+	api.Delete("/sales_items/delete/:code", controllers.DeleteSaleItem)
 }

@@ -28,6 +28,8 @@ Content-Type: application/json
 ###
 DELETE  {{hostname}}/products/delete/PRD00007
 
+###
+GET {{hostname}}/payment_method?page=1
 
 ###
 GET {{hostname}}/categories?page=1
