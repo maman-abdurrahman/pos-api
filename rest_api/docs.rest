@@ -30,7 +30,7 @@ DELETE  {{hostname}}/products/delete/PRD00007
 
 
 ###
-GET {{hostname}}/categories?page=3
+GET {{hostname}}/categories?page=1
 
 ###
 GET {{hostname}}/categories/C00005
