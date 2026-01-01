@@ -42,6 +42,9 @@ Content-Type: application/json
 }
 
 ###
+GET {{hostname}}/sales?page=1
+
+###
 GET {{hostname}}/categories?page=1
 
 ###
