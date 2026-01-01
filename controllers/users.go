@@ -4,6 +4,7 @@ import (
 	"math"
 	"strconv"
 
+	"com.app/pos-app/constants"
 	"com.app/pos-app/database"
 	"com.app/pos-app/models"
 	"com.app/pos-app/utils"
@@ -13,8 +14,8 @@ import (
 
 func GetUsers(c *fiber.Ctx) error {
 	keyword := c.Query("search")
-	page, _ := strconv.Atoi(c.Query("page", "1"))
-	limit, _ := strconv.Atoi(c.Query("limit", "2"))
+	page, _ := strconv.Atoi(c.Query("page", constants.Page))
+	limit, _ := strconv.Atoi(c.Query("limit", constants.Limit))
 
 	if page < 1 {
 		page = 1
