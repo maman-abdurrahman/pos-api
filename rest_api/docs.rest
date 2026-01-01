@@ -33,14 +33,14 @@ DELETE  {{hostname}}/products/delete/PRD00007
 GET {{hostname}}/categories?page=3
 
 ###
-GET {{hostname}}/categories/CAT003
+GET {{hostname}}/categories/C00005
 
 ###
-PUT {{hostname}}/categories/update/C00006
+POST {{hostname}}/categories/create
 Content-Type: application/json
 
 {
-    "name": "Aksesorise"
+    "name": "Aksesoris"
 }
 
 ###
