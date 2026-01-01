@@ -32,6 +32,16 @@ DELETE  {{hostname}}/products/delete/PRD00007
 GET {{hostname}}/payment_method?page=1
 
 ###
+POST {{hostname}}/payment_method/create
+Content-Type: application/json
+
+{
+    "name": "BRI",
+    "description": "Pembayaran via transfer 1",
+    "is_active": true
+}
+
+###
 GET {{hostname}}/categories?page=1
 
 ###

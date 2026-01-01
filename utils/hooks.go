@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -70,11 +69,11 @@ func GenerateCode(codestr string, data string, decimal string) string {
 	re := regexp.MustCompile(`\d+`)
 	numberStr := re.FindString(data)
 	num, err := strconv.Atoi(numberStr)
+	newID := 1
 	if err != nil {
-		log.Fatal("Cannot generate code")
-		return ""
+		newID = 1
 	}
-	newID := num + 1
+	newID = num + 1
 	format := fmt.Sprintf("%%s%%0%sd", decimal)
 	newCode := fmt.Sprintf(format, codestr, newID)
 	return newCode

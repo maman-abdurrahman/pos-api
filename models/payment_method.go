@@ -26,6 +26,6 @@ func (pm *PaymentMethod) BeforeCreate(tx *gorm.DB) (err error) {
 	var last PaymentMethod
 	tx.Order("id DESC").First(&last)
 	paymentCode := last.PaymentMethodCode
-	pm.PaymentMethodCode = utils.GenerateCode("PC", paymentCode, "5") //fmt.Sprintf("PRD%05d", newID) // PRD00001, PRD00002, ...
+	pm.PaymentMethodCode = utils.GenerateCode("PM", paymentCode, "5") //fmt.Sprintf("PRD%05d", newID) // PRD00001, PRD00002, ...
 	return nil
 }
