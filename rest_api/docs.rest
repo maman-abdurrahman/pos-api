@@ -30,17 +30,17 @@ DELETE  {{hostname}}/products/delete/PRD00007
 
 
 ###
-GET {{hostname}}/categories?page=1
+GET {{hostname}}/categories?page=3
 
 ###
 GET {{hostname}}/categories/CAT003
 
 ###
-PUT {{hostname}}/categories/update/CAT003
+PUT {{hostname}}/categories/update/C00006
 Content-Type: application/json
 
 {
-    "name": "Mainan"
+    "name": "Aksesorise"
 }
 
 ###
