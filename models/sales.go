@@ -20,12 +20,11 @@ type Sales struct {
 }
 
 type CreateSales struct {
-	SalesCode         string `json:"sales_code" validate:"required, min=5"`
-	UserCode          string `json:"user_code"`
-	PaymentMethodCode string `json:"payment_method_code" validate:"required"`
-	Total             string `json:"total"`
-	Discount          string `json:"discount"`
-	FinalTotal        string `json:"final_total"`
+	UserCode          string  `json:"user_code"`
+	PaymentMethodCode string  `json:"payment_method_code" validate:"required"`
+	Total             float64 `json:"total"`
+	Discount          float64 `json:"discount"`
+	FinalTotal        float64 `json:"final_total"`
 }
 
 func (s *Sales) BeforeCreate(tx *gorm.DB) (err error) {

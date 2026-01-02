@@ -8,7 +8,9 @@ import (
 	"com.app/pos-app/database"
 	"com.app/pos-app/models"
 	"com.app/pos-app/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 func GetSales(c *fiber.Ctx) error {
@@ -57,11 +59,62 @@ func GetOneSale(c *fiber.Ctx) error {
 	return utils.Success(c, "Success getting data", result)
 }
 func CreateSale(c *fiber.Ctx) error {
-	return utils.Success(c, "Success save data", fiber.Map{})
+	validate := validator.New()
+	var body models.CreateSales
+	errBody := c.BodyParser(&body)
+	if errBody != nil {
+		return utils.Error(c, 400, "Invalid request", nil)
+	}
+	errValidate := validate.Struct(body)
+	if errValidate != nil {
+		for _, e := range errValidate.(validator.ValidationErrors) {
+			errorField := utils.ValidatorForm(e)
+			return utils.Error(c, 400, "Validation error", errorField)
+		}
+	}
+	var result models.Sales
+	err := utils.WithTransaction(c.Context(), database.DB, func(tx *gorm.DB) error {
+		payload := models.Sales{
+			UserCode:          body.UserCode,
+			PaymentMethodCode: body.PaymentMethodCode,
+			Total:             body.Total,
+			Discount:          body.Discount,
+			FinalTotal:        body.FinalTotal,
+		}
+		errInsert := tx.Create(&payload).Error
+		if errInsert != nil {
+			return errInsert
+		}
+		result.UserCode = body.UserCode
+		result.Total = body.Total
+		result.Discount = body.Discount
+		result.FinalTotal = body.FinalTotal
+		return nil
+	})
+	if err != nil {
+		return utils.Error(c, 500, "Failed to save data", nil)
+	}
+	return utils.Success(c, "Success save data", result)
 }
 func UpdateSale(c *fiber.Ctx) error {
 	return utils.Success(c, "Success update data", fiber.Map{})
 }
 func DeleteSale(c *fiber.Ctx) error {
-	return utils.Success(c, "Success delete data", fiber.Map{})
+	code := c.Params("code")
+	var result models.Sales
+	err := utils.WithTransaction(c.Context(), database.DB, func(tx *gorm.DB) error {
+		errFind := tx.Where("sales_code = ?", code).First(&result).Error
+		if errFind != nil {
+			return utils.Error(c, 404, "Data not found", nil)
+		}
+		errDelete := tx.Where("sales_code = ?", code).Delete(&result).Error
+		if errDelete != nil {
+			return errDelete
+		}
+		return nil
+	})
+	if err != nil {
+		return utils.Error(c, 404, "Failed to delete data", nil)
+	}
+	return utils.Success(c, "Success delete data", result)
 }
