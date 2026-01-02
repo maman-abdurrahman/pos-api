@@ -48,7 +48,13 @@ func GetSales(c *fiber.Ctx) error {
 	})
 }
 func GetOneSale(c *fiber.Ctx) error {
-	return utils.Success(c, "Success getting data", fiber.Map{})
+	code := c.Params("code")
+	var result models.Sales
+	err := database.DB.Where("sales_code = ?", code).First(&result).Error
+	if err != nil {
+		return utils.Error(c, 404, "Data not found", nil)
+	}
+	return utils.Success(c, "Success getting data", result)
 }
 func CreateSale(c *fiber.Ctx) error {
 	return utils.Success(c, "Success save data", fiber.Map{})
